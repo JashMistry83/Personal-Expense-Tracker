@@ -1,0 +1,6 @@
+CREATE TABLE expense(
+	id SERIAL PRIMARY KEY,
+	description VARCHAR2(400) NOT NULL,
+	transfer_to VARCHAR2(50) NOT NULL,
+	amount_rs NUMERIC(100) NOT NULL
+);
