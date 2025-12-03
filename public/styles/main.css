@@ -1,0 +1,101 @@
+/* General Layout */
+.page-body {
+  background: #f6f9fc;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.main-header {
+  background: #1f2937;
+  padding: 14px 30px;
+}
+
+.brand-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff !important;
+}
+
+/* Footer */
+.main-footer {
+  background: #1f2937;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+/* ---------- AUTH FORMS ---------- */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 14px;
+}
+
+.auth-title {
+  text-align: center;
+  font-weight: 700;
+}
+
+.custom-input {
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.btn-auth {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+.btn-google {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+.btn-google:hover {
+  background: #f3f4f6;
+}
+
+/* ---------- EXPENSE FORM ---------- */
+
+.expense-container {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.expense-card {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 550px;
+  padding: 35px;
+}
+
+.expense-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+/* Buttons */
+.btn-primary {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  border-radius: 8px;
+}
+
+.btn-primary:hover {
+  background: #1e40af !important;
+}
