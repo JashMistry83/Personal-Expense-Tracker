@@ -4,3 +4,19 @@ CREATE TABLE expense(
 	transfer_to VARCHAR2(50) NOT NULL,
 	amount_rs NUMERIC(100) NOT NULL
 );
+
+ALTER TABLE expense 
+ADD COLUMN user_id INTEGER;
+
+ALTER TABLE expense
+ADD CONSTRAINT fk_constraint 
+FOREIGN KEY (user_id)
+REFERENCES users(id);
+
+CREATE TABLE users(
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(100) NOT NULL,
+	gmail VARCHAR(255) NOT NULL UNIQUE,
+	password VARCHAR(60) NOT NULL,
+	ph_no VARCHAR(20) UNIQUE
+)
