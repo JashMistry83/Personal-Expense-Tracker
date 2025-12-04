@@ -16,24 +16,32 @@
   
     <link rel="stylesheet" href="/styles/main.css" />
   </head>
-  <body>
+  <body class="home-body">
     
     <%- include('partials/header') %>
 
-    <div class="jumbotron centered">
-      <div class="container">
-        <div class="glass-panel">
-            <i class="fas fa-wallet fa-6x mb-4"></i>
-            <h1 class="display-4">Expense Tracker</h1>
-            <p class="lead">Smart financial calculation for your future.</p>
-            <hr class="my-4">
-            <div class="action-buttons">
-                <a class="btn btn-primary btn-lg custom-btn" href="/register" role="button">Register</a>
-                <a class="btn btn-outline-light btn-lg custom-btn" href="/login" role="button">Login</a>
-            </div>
+    <main class="home-main">
+      <div class="hero-jumbo">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-icon-wrapper">
+            <i class="fas fa-wallet hero-icon"></i>
+          </div>
+          <h1 class="hero-title">Expense Tracker</h1>
+          <p class="hero-subtitle">Smart financial calculation for your future</p>
+          <p class="hero-text">Take control of your finances with our intuitive expense tracking system. Monitor your income, expenses, and transactions all in one place.</p>
+          <hr class="hero-divider">
+          <div class="hero-btn-group">
+            <a href="/register" class="hero-btn hero-btn-primary">
+              <i class="fas fa-user-plus"></i> Get Started
+            </a>
+            <a href="/login" class="hero-btn hero-btn-secondary">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
 
     <%- include('partials/footer') %>
 

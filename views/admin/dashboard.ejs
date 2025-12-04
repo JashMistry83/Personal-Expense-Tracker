@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | Expense Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <%- include('../partials/header') %>
+
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <div>
+          <h1><i class="fas fa-shield-alt"></i> Admin Dashboard</h1>
+          <p style="color: var(--text-muted); margin-top: 0.5rem;">System overview and management</p>
+        </div>
+        <div class="dashboard-actions">
+          <a href="/admin/users" class="btn btn-primary">
+            <i class="fas fa-users"></i> Manage Users
+          </a>
+          <a href="/admin/transactions" class="btn btn-primary">
+            <i class="fas fa-list"></i> All Transactions
+          </a>
+          <a href="/admin/stats" class="btn btn-primary">
+            <i class="fas fa-chart-bar"></i> Statistics
+          </a>
+          <a href="/expense" class="btn btn-secondary" style="background: var(--dark-card); color: var(--text-secondary); border: 1px solid var(--dark-border);">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </a>
+        </div>
+      </div>
+
+      <!-- Overview Stats -->
+      <div class="stats-grid">
+        <div class="stat-card admin-stat">
+          <div class="stat-header">
+            <span class="stat-label">Total Users</span>
+            <div class="stat-icon" style="background: rgba(99, 102, 241, 0.2); color: var(--primary-light);">
+              <i class="fas fa-users"></i>
+            </div>
+          </div>
+          <div class="stat-value"><%= stats.totalUsers %></div>
+          <div class="stat-change">Registered users</div>
+        </div>
+
+        <div class="stat-card admin-stat">
+          <div class="stat-header">
+            <span class="stat-label">Total Transactions</span>
+            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.2); color: var(--info-color);">
+              <i class="fas fa-exchange-alt"></i>
+            </div>
+          </div>
+          <div class="stat-value"><%= stats.totalTransactions %></div>
+          <div class="stat-change">All transactions</div>
+        </div>
+
+        <div class="stat-card admin-stat">
+          <div class="stat-header">
+            <span class="stat-label">Total Income</span>
+            <div class="stat-icon income">
+              <i class="fas fa-arrow-down"></i>
+            </div>
+          </div>
+          <div class="stat-value amount-positive">₹<%= stats.totalIncome %></div>
+          <div class="stat-change">System-wide income</div>
+        </div>
+
+        <div class="stat-card admin-stat">
+          <div class="stat-header">
+            <span class="stat-label">Total Expense</span>
+            <div class="stat-icon expense">
+              <i class="fas fa-arrow-up"></i>
+            </div>
+          </div>
+          <div class="stat-value amount-negative">₹<%= stats.totalExpense %></div>
+          <div class="stat-change">System-wide expense</div>
+        </div>
+
+        <div class="stat-card admin-stat">
+          <div class="stat-header">
+            <span class="stat-label">Net Balance</span>
+            <div class="stat-icon balance">
+              <i class="fas fa-wallet"></i>
+            </div>
+          </div>
+          <div class="stat-value" style="color: <%= parseFloat(stats.netBalance) >= 0 ? 'var(--success-color)' : 'var(--danger-color)' %>">
+            ₹<%= stats.netBalance %>
+          </div>
+          <div class="stat-change">Income - Expense</div>
+        </div>
+
+        <div class="stat-card admin-stat">
+          <div class="stat-header">
+            <span class="stat-label">Total Amount</span>
+            <div class="stat-icon" style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6;">
+              <i class="fas fa-rupee-sign"></i>
+            </div>
+          </div>
+          <div class="stat-value">₹<%= stats.totalAmount %></div>
+          <div class="stat-change">All transaction value</div>
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="transactions-section">
+        <div class="section-header">
+          <h2><i class="fas fa-clock"></i> Recent Transactions</h2>
+          <a href="/admin/transactions" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+            View All <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <% if (recentTransactions && recentTransactions.length > 0) { %>
+          <div style="overflow-x: auto;">
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>User</th>
+                  <th>Description</th>
+                  <th>Transfer To</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentTransactions.forEach(transaction => { %>
+                  <tr>
+                    <td>
+                      <%= new Date(transaction.created_at).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric' 
+                      }) %>
+                    </td>
+                    <td>
+                      <strong><%= transaction.user_name || transaction.user_email %></strong>
+                      <br>
+                      <small style="color: var(--text-muted);"><%= transaction.user_email %></small>
+                    </td>
+                    <td><strong><%= transaction.description %></strong></td>
+                    <td><%= transaction.transfer_to || 'N/A' %></td>
+                    <td>
+                      <span class="type-badge <%= transaction.type %>">
+                        <%= transaction.type %>
+                      </span>
+                    </td>
+                    <td class="<%= transaction.type === 'income' || transaction.type === 'receivable' ? 'amount-positive' : 'amount-negative' %>">
+                      <%= transaction.type === 'income' || transaction.type === 'receivable' ? '+' : '-' %>₹<%= parseFloat(transaction.amount_rs).toFixed(2) %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>No transactions found</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Top Users -->
+      <div class="transactions-section">
+        <div class="section-header">
+          <h2><i class="fas fa-trophy"></i> Top Active Users</h2>
+          <a href="/admin/users" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+            View All <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <% if (topUsers && topUsers.length > 0) { %>
+          <div style="overflow-x: auto;">
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Transactions</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% topUsers.forEach((user, index) => { %>
+                  <tr>
+                    <td>
+                      <strong><%= user.name || user.gmail %></strong>
+                    </td>
+                    <td><%= user.gmail %></td>
+                    <td><%= user.ph_no || 'N/A' %></td>
+                    <td><%= user.transaction_count || 0 %></td>
+                    <td class="amount-positive">₹<%= parseFloat(user.total_amount || 0).toFixed(2) %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-users"></i>
+            <p>No users found</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>
+

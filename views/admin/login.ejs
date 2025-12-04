@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login | Expense Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <%- include('../partials/header') %>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1><i class="fas fa-shield-alt"></i> Admin Login</h1>
+          <p>Access the admin dashboard</p>
+        </div>
+
+        <form action="/admin/login" method="POST" id="adminLoginForm">
+          <!-- Error Message Display -->
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-error" id="errorAlert" style="display: block;">
+              <i class="fas fa-exclamation-circle"></i>
+              <span><%= typeof message !== 'undefined' && message ? message : 'An error occurred. Please try again.' %></span>
+              <button type="button" onclick="closeAlert()" style="background: none; border: none; color: inherit; cursor: pointer; margin-left: auto;">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          <% } %>
+
+          <div class="form-group">
+            <label for="adminEmail">
+              <i class="fas fa-envelope"></i> Admin Email
+            </label>
+            <input 
+              type="email" 
+              class="form-control" 
+              name="username" 
+              id="adminEmail"
+              placeholder="Enter admin email"
+              required 
+            />
+            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem; display: block;">
+              <i class="fas fa-info-circle"></i> Email must be registered in ADMIN_EMAILS
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="adminPassword">
+              <i class="fas fa-shield-alt"></i> Admin Password
+            </label>
+            <input 
+              type="password" 
+              class="form-control" 
+              name="adminPassword" 
+              id="adminPassword"
+              placeholder="Enter admin password"
+              required 
+            />
+            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem; display: block;">
+              <i class="fas fa-info-circle"></i> Use the password from ADMIN_PASSWORD in .env
+            </small>
+          </div>
+
+          <button type="submit" class="btn btn-admin btn-block">
+            <i class="fas fa-shield-alt"></i> Admin Login
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--dark-border);">
+          <a href="/login" style="color: var(--text-muted); text-decoration: none; font-size: 0.875rem;">
+            <i class="fas fa-arrow-left"></i> Back to User Login
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Show error alert if present
+      <% if (typeof error !== 'undefined' && error) { %>
+        setTimeout(() => {
+          const alert = document.getElementById('errorAlert');
+          if (alert) {
+            alert.style.display = 'flex';
+          }
+        }, 100);
+      <% } %>
+
+      function closeAlert() {
+        const alert = document.getElementById('errorAlert');
+        if (alert) {
+          alert.style.display = 'none';
+        }
+        // Remove error from URL
+        if (window.location.search.includes('error=')) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+
+      // Auto-close alert after 5 seconds
+      <% if (typeof error !== 'undefined' && error) { %>
+        setTimeout(() => {
+          closeAlert();
+        }, 5000);
+      <% } %>
+    </script>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>
+

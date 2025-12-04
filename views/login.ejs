@@ -1,35 +1,125 @@
-<%- include('partials/header') %>
-<link rel="stylesheet" href="/styles/main.css">
-<div class="container mt-5">
-  <h1>Login</h1>
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="card">
-        <div class="card-body">
-          <!-- Makes POST request to /login route -->
-          <form action="/login" method="POST">
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" class="form-control" name="username" />
-            </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" class="form-control" name="password" />
-            </div>
-            <button type="submit" class="btn btn-dark">Login</button>
-          </form>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Expense Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <%- include('partials/header') %>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1><i class="fas fa-sign-in-alt"></i> Welcome Back</h1>
+          <p>Sign in to continue tracking your expenses</p>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <a class="btn btn-block" href="/auth/google" role="button">
-            <i class="fab fa-google"></i> Sign In with Google
+
+        <!-- Admin Login Button -->
+        <div style="margin-bottom: 1.5rem; text-align: center;">
+          <a href="/admin/login" class="btn btn-admin" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <i class="fas fa-shield-alt"></i> Admin Login
           </a>
         </div>
+
+        <div class="row" style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;" id="auth-row">
+          <div>
+            <form action="/login" method="POST" id="loginForm">
+              <!-- Error Message Display -->
+              <% if (typeof error !== 'undefined' && error) { %>
+                <div class="alert alert-error" id="errorAlert" style="display: block;">
+                  <i class="fas fa-exclamation-circle"></i>
+                  <span><%= typeof message !== 'undefined' && message ? message : 'An error occurred. Please try again.' %></span>
+                  <button type="button" onclick="closeAlert()" style="background: none; border: none; color: inherit; cursor: pointer; margin-left: auto;">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              <% } %>
+              
+              <div class="form-group">
+                <label for="email">
+                  <i class="fas fa-envelope"></i> Email Address
+                </label>
+                <input 
+                  type="email" 
+                  class="form-control" 
+                  name="username" 
+                  id="email"
+                  placeholder="Enter your email"
+                  required 
+                />
+              </div>
+              <div class="form-group">
+                <label for="password">
+                  <i class="fas fa-lock"></i> Password
+                </label>
+                <input 
+                  type="password" 
+                  class="form-control" 
+                  name="password" 
+                  id="password"
+                  placeholder="Enter your password"
+                  required 
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-sign-in-alt"></i> Login
+              </button>
+            </form>
+          </div>
+
+          <div class="social-block">
+            <div style="text-align: center; margin-bottom: 1rem;">
+              <p style="color: var(--text-muted); font-size: 0.875rem;">Or continue with</p>
+            </div>
+            <a class="btn btn-google btn-block" href="/auth/google" role="button">
+              <i class="fab fa-google"></i> Sign In with Google
+            </a>
+            <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--dark-border);">
+              <p style="color: var(--text-muted); font-size: 0.875rem;">
+                Don't have an account? 
+                <a href="/register" style="color: var(--primary-light); text-decoration: none; font-weight: 600;">Sign up</a>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-<%- include('partials/footer') %>
+
+    <script>
+      // Show error alert if present
+      <% if (typeof error !== 'undefined' && error) { %>
+        setTimeout(() => {
+          const alert = document.getElementById('errorAlert');
+          if (alert) {
+            alert.style.display = 'flex';
+          }
+        }, 100);
+      <% } %>
+
+      function closeAlert() {
+        const alert = document.getElementById('errorAlert');
+        if (alert) {
+          alert.style.display = 'none';
+        }
+        // Remove error from URL
+        if (window.location.search.includes('error=')) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+
+      // Auto-close alert after 5 seconds
+      <% if (typeof error !== 'undefined' && error) { %>
+        setTimeout(() => {
+          closeAlert();
+        }, 5000);
+      <% } %>
+    </script>
+
+    <%- include('partials/footer') %>
+  </body>
+</html>

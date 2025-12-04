@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Users | Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <%- include('../partials/header') %>
+
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <div>
+          <h1><i class="fas fa-users"></i> User Management</h1>
+          <p style="color: var(--text-muted); margin-top: 0.5rem;">Manage all registered users</p>
+        </div>
+        <div class="dashboard-actions">
+          <a href="/admin" class="btn btn-secondary" style="background: var(--dark-card); color: var(--text-secondary); border: 1px solid var(--dark-border);">
+            <i class="fas fa-arrow-left"></i> Back to Admin
+          </a>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="transactions-section" style="margin-bottom: 1.5rem;">
+        <form method="GET" action="/admin/users" style="display: flex; gap: 1rem; align-items: center;">
+          <div style="flex: 1;">
+            <input 
+              type="text" 
+              name="search" 
+              class="form-control" 
+              placeholder="Search by name or email..." 
+              value="<%= search %>"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i> Search
+          </button>
+          <% if (search) { %>
+            <a href="/admin/users" class="btn btn-secondary" style="background: var(--dark-card); color: var(--text-secondary); border: 1px solid var(--dark-border);">
+              <i class="fas fa-times"></i> Clear
+            </a>
+          <% } %>
+        </form>
+      </div>
+
+      <!-- Users Table -->
+      <div class="transactions-section">
+        <div class="section-header">
+          <h2><i class="fas fa-list"></i> All Users (<%= users.length %>)</h2>
+        </div>
+
+        <% if (users && users.length > 0) { %>
+          <div style="overflow-x: auto;">
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Transactions</th>
+                  <th>Total Income</th>
+                  <th>Total Expense</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(user => { %>
+                  <tr>
+                    <td><%= user.id %></td>
+                    <td>
+                      <strong><%= user.name || 'N/A' %></strong>
+                    </td>
+                    <td><%= user.gmail %></td>
+                    <td><%= user.ph_no || 'N/A' %></td>
+                    <td><%= user.transaction_count || 0 %></td>
+                    <td class="amount-positive">₹<%= parseFloat(user.total_income || 0).toFixed(2) %></td>
+                    <td class="amount-negative">₹<%= parseFloat(user.total_expense || 0).toFixed(2) %></td>
+                    <td>
+                      <button 
+                        onclick="deleteUser(<%= user.id %>, '<%= (user.name || user.gmail).replace(/'/g, "\\'") %>')" 
+                        class="btn btn-danger"
+                        style="padding: 0.5rem 1rem; font-size: 0.875rem;"
+                        <%= user.id === currentUserId ? 'disabled title="Cannot delete yourself"' : '' %>
+                      >
+                        <i class="fas fa-trash"></i> Delete
+                      </button>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-users"></i>
+            <p>No users found</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <script>
+      async function deleteUser(userId, userName) {
+        if (!confirm(`Are you sure you want to delete user "${userName}"?\n\nThis will also delete all their transactions. This action cannot be undone!`)) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`/admin/users/delete/${userId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            alert('User deleted successfully!');
+            location.reload();
+          } else {
+            alert(data.error || 'Error deleting user');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error deleting user. Please try again.');
+        }
+      }
+    </script>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>
+

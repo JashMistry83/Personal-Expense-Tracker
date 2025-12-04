@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Statistics | Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <%- include('../partials/header') %>
+
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <div>
+          <h1><i class="fas fa-chart-bar"></i> Statistics & Analytics</h1>
+          <p style="color: var(--text-muted); margin-top: 0.5rem;">Detailed insights and analytics</p>
+        </div>
+        <div class="dashboard-actions">
+          <a href="/admin" class="btn btn-secondary" style="background: var(--dark-card); color: var(--text-secondary); border: 1px solid var(--dark-border);">
+            <i class="fas fa-arrow-left"></i> Back to Admin
+          </a>
+        </div>
+      </div>
+
+      <!-- Monthly Statistics -->
+      <div class="transactions-section">
+        <div class="section-header">
+          <h2><i class="fas fa-calendar-alt"></i> Monthly Statistics (Last 12 Months)</h2>
+        </div>
+
+        <% if (monthlyStats && monthlyStats.length > 0) { %>
+          <div style="overflow-x: auto;">
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Transactions</th>
+                  <th>Total Amount</th>
+                  <th>Income</th>
+                  <th>Expense</th>
+                  <th>Net Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% monthlyStats.forEach(stat => { %>
+                  <tr>
+                    <td><strong><%= stat.month %></strong></td>
+                    <td><%= stat.transaction_count %></td>
+                    <td>₹<%= parseFloat(stat.total_amount || 0).toFixed(2) %></td>
+                    <td class="amount-positive">₹<%= parseFloat(stat.income || 0).toFixed(2) %></td>
+                    <td class="amount-negative">₹<%= parseFloat(stat.expense || 0).toFixed(2) %></td>
+                    <td style="color: <%= parseFloat(stat.income || 0) - parseFloat(stat.expense || 0) >= 0 ? 'var(--success-color)' : 'var(--danger-color)' %>; font-weight: 600;">
+                      ₹<%= (parseFloat(stat.income || 0) - parseFloat(stat.expense || 0)).toFixed(2) %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-chart-line"></i>
+            <p>No monthly statistics available</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Transaction Type Distribution -->
+      <div class="transactions-section">
+        <div class="section-header">
+          <h2><i class="fas fa-pie-chart"></i> Transaction Type Distribution</h2>
+        </div>
+
+        <% if (typeDistribution && typeDistribution.length > 0) { %>
+          <div style="overflow-x: auto;">
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Count</th>
+                  <th>Total Amount</th>
+                  <th>Average Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% typeDistribution.forEach(dist => { %>
+                  <tr>
+                    <td>
+                      <span class="type-badge <%= dist.type %>">
+                        <%= dist.type %>
+                      </span>
+                    </td>
+                    <td><%= dist.count %></td>
+                    <td class="<%= dist.type === 'income' || dist.type === 'receivable' ? 'amount-positive' : 'amount-negative' %>">
+                      ₹<%= parseFloat(dist.total_amount || 0).toFixed(2) %>
+                    </td>
+                    <td>
+                      ₹<%= (parseFloat(dist.total_amount || 0) / parseInt(dist.count || 1)).toFixed(2) %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-chart-pie"></i>
+            <p>No type distribution data available</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Top Users by Transactions -->
+      <div class="transactions-section">
+        <div class="section-header">
+          <h2><i class="fas fa-trophy"></i> Top Users by Transaction Count</h2>
+        </div>
+
+        <% if (topUsersByTransactions && topUsersByTransactions.length > 0) { %>
+          <div style="overflow-x: auto;">
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Transactions</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% topUsersByTransactions.forEach((user, index) => { %>
+                  <tr>
+                    <td>
+                      <strong style="font-size: 1.25rem; color: var(--warning-color);">
+                        #<%= index + 1 %>
+                      </strong>
+                    </td>
+                    <td><strong><%= user.name || user.gmail %></strong></td>
+                    <td><%= user.gmail %></td>
+                    <td><%= user.transaction_count %></td>
+                    <td class="amount-positive">₹<%= parseFloat(user.total_amount || 0).toFixed(2) %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-users"></i>
+            <p>No user statistics available</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Top Users by Amount -->
+      <div class="transactions-section">
+        <div class="section-header">
+          <h2><i class="fas fa-coins"></i> Top Users by Total Amount</h2>
+        </div>
+
+        <% if (topUsersByAmount && topUsersByAmount.length > 0) { %>
+          <div style="overflow-x: auto;">
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Transactions</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% topUsersByAmount.forEach((user, index) => { %>
+                  <tr>
+                    <td>
+                      <strong style="font-size: 1.25rem; color: var(--warning-color);">
+                        #<%= index + 1 %>
+                      </strong>
+                    </td>
+                    <td><strong><%= user.name || user.gmail %></strong></td>
+                    <td><%= user.gmail %></td>
+                    <td><%= user.transaction_count %></td>
+                    <td class="amount-positive">₹<%= parseFloat(user.total_amount || 0).toFixed(2) %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-users"></i>
+            <p>No user statistics available</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>
+
