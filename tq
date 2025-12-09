@@ -1,0 +1,41 @@
+[33mcommit 2466bba8fd6a2939ba23289e7aa21c34831b0a48[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelopment[m[33m)[m
+Author: JashMistry83 <jashmistry1721@gmail.com>
+Date:   Thu Dec 4 09:23:56 2025 +0530
+
+    Final development of web app
+
+[33mcommit 096ccd6a4c7c5fd018b64b1e29e0ce1ff370c50b[m
+Author: JashMistry83 <jashmistry1721@gmail.com>
+Date:   Thu Dec 4 07:39:04 2025 +0530
+
+    OLD ONE final
+
+[33mcommit 1222c16bd9a7ca821463336164d55a5c542727ea[m
+Author: JashMistry83 <jashmistry1721@gmail.com>
+Date:   Thu Dec 4 07:38:49 2025 +0530
+
+    OLD ONE
+
+[33mcommit 922a3aa2f293d5dc97800b6e17d3e38406ad1fbd[m
+Author: JashMistry83 <jashmistry1721@gmail.com>
+Date:   Wed Dec 3 23:23:21 2025 +0530
+
+    Login & reigsteration with OAuth with google added with ui
+
+[33mcommit 953e3b696f3fa2339b3e3d614167627bdf5d956a[m
+Author: JashMistry83 <jashmistry1721@gmail.com>
+Date:   Wed Dec 3 21:07:27 2025 +0530
+
+    Added basic logged in & register funcationality 3/12/25
+
+[33mcommit 1158f0a158d240b275a2e05612605ca7e32b7a4b[m
+Author: JashMistry83 <jashmistry1721@gmail.com>
+Date:   Sat Nov 29 12:01:41 2025 +0530
+
+    Initial commit for deveopemnt branch after just running my node app.
+
+[33mcommit 8a5b8d2c60152b78ba95f7304f645a34b1dabbd0[m[33m ([m[1;32mmaster[m[33m)[m
+Author: JashMistry83 <jashmistry1721@gmail.com>
+Date:   Sat Nov 29 11:54:02 2025 +0530
+
+    Initial commit of my Personal Expense Tracker Project of MCA
