@@ -883,6 +883,48 @@ app.post("/login", async (req, res, next) => {
   }
 });
 
+app.get(
+  "/auth/google/register",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+
+app.get(
+  "/auth/google/register/callback",
+  passport.authenticate("google", { failureRedirect: "/register" }),
+  async (req, res) => {
+    try {
+      const { displayName, emails } = req.user;
+      const email = emails[0].value;
+
+      const existing = await db.query(
+        "SELECT * FROM users WHERE gmail = $1",
+        [email]
+      );
+
+      if (existing.rows.length > 0) {
+        return res.redirect(
+          "/login?error=exists&message=Account already exists"
+        );
+      }
+
+      const result = await db.query(
+        "INSERT INTO users (name, gmail, password) VALUES ($1, $2, $3) RETURNING *",
+        [displayName, email, "google"]
+      );
+
+      req.login(result.rows[0], (err) => {
+        if (err) return res.redirect("/login");
+        res.redirect("/expense");
+      });
+    } catch (err) {
+      console.error("Google register error:", err);
+      res.redirect("/register");
+    }
+  }
+);
+
+
 // Passport Strategies
 passport.use(
   new Strategy(async function verify(username, password, cb) {
@@ -906,6 +948,8 @@ passport.use(
   }),
 );
 
+
+
 // Google Auth (Keep your existing Google Strategy setup if credentials are in .env)
 passport.use(
   "google",
@@ -921,12 +965,14 @@ passport.use(
         const result = await db.query("SELECT * FROM users WHERE gmail = $1", [
           profile.email,
         ]);
+        // if (result.rows.length === 0) {
+        //   const newUser = await db.query(
+        //     "INSERT INTO users (name, gmail, password) VALUES ($1, $2, $3) RETURNING *",
+        //     [profile.name.givenName, profile.email, "google"],
+        //   );
+        //   return cb(null, newUser.rows[0]);
         if (result.rows.length === 0) {
-          const newUser = await db.query(
-            "INSERT INTO users (name, gmail, password) VALUES ($1, $2, $3) RETURNING *",
-            [profile.name.givenName, profile.email, "google"],
-          );
-          return cb(null, newUser.rows[0]);
+          return cb(null, false, { message: "User not registered" });
         } else {
           return cb(null, result.rows[0]);
         }
@@ -943,7 +989,8 @@ app.get(
 );
 app.get(
   "/auth/google/secrets",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", { ffailureRedirect: "/register?error=google_not_registered"
+ }),
   (req, res) => {
     // Check if user is admin and redirect accordingly
     if (isAdmin(req.user)) {
