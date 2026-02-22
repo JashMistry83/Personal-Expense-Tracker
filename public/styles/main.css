@@ -1058,3 +1058,7 @@ footer {
   margin: 0 auto;
   padding: 0 1rem;
 }
+
+#health_related{
+  display:hidden;
+}
